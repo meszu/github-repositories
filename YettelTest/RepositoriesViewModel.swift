@@ -8,10 +8,23 @@
 import Foundation
 import Combine
 
-public class RepositoriesViewModel: ObservableObject {
+internal class RepositoriesViewModel: ObservableObject {
+    
+    // MARK: - Public variables
+    
     @Published var repositories: [Repository] = []
-    @Published var errorMessage: String? = nil
     @Published var keywords: [String] = ["data", "swift", "machine learning", "artifical intelligence", "game"]
+    @Published var errorMessage: String? = nil
+
+    // MARK: - Managers
+    
+    private var networkManager: NetworkingManager
+    
+    // MARK: - Init
+    
+    init(networkManager: NetworkingManager) {
+        self.networkManager = networkManager
+    }
     
     private var cancellables = Set<AnyCancellable>()
     
@@ -21,7 +34,7 @@ public class RepositoriesViewModel: ObservableObject {
             return
         }
         
-        NetworkManager.shared.getRepositories(query: query)
+        networkManager.getRepositories(query: query)
             .sink(receiveCompletion: { [weak self] completion in
                 guard let self else { return }
                 

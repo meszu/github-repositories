@@ -8,8 +8,12 @@
 import SwiftUI
 
 struct RepositoryListView: View {
-    @StateObject private var viewModel = RepositoriesViewModel()
+    @StateObject private var viewModel: RepositoriesViewModel
     @State private var searchText = ""
+    
+    init(networkManager: NetworkManager) {
+        _viewModel = StateObject(wrappedValue: RepositoriesViewModel(networkManager: networkManager))
+    }
         
     var body: some View {
         NavigationStack {
@@ -61,5 +65,7 @@ struct RepositoryListView: View {
 }
 
 #Preview {
-    RepositoryListView()
+    let networkManager = NetworkManager()
+    
+    RepositoryListView(networkManager: networkManager)
 }

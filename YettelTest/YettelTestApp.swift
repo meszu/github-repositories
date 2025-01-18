@@ -9,9 +9,11 @@ import SwiftUI
 
 @main
 struct YettelTestApp: App {
+    let networkManager = NetworkManager()
+    
     var body: some Scene {
         WindowGroup {
-            RepositoryListView()
+            RepositoryListView(networkManager: networkManager)
         }
     }
 }

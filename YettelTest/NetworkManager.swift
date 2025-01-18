@@ -8,14 +8,11 @@
 import Combine
 import Foundation
 
-//internal protocol NetworkingManager {
-//    func getRepositories(query: String) -> AnyPublisher<[Repository], Error>
-//}
+internal protocol NetworkingManager {
+    func getRepositories(query: String) -> AnyPublisher<[Repository], Error>
+}
 
-//public class NetworkManager: NetworkingManager {
-public class NetworkManager {
-    static let shared = NetworkManager()
-    
+internal class NetworkManager: NetworkingManager {
     private let baseURL = "https://api.github.com/search/repositories?q="
     
     func getRepositories(query: String) -> AnyPublisher<[Repository], Error> {
