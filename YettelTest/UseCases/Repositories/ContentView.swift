@@ -19,36 +19,49 @@ struct RepositoryListView: View {
     var body: some View {
         NavigationStack {
             GeometryReader { geometry in
-                if isLoading {
-                    
-                }
                 VStack {
-                    List(viewModel.repositories) { repo in
-                        RepositoryCellView(name: repo.name,
-                                           stargazerCount: repo.stargazerCount,
-                                           description: repo.description,
-                                           lastModifiedDate: repo.lastModifiedDate)
-                        .listRowSeparator(.hidden)
-                        .listRowBackground(Color.purple.opacity(0.1))
-                    }
-                    .searchable(text: $searchText,
-                                placement: .automatic,
-                                prompt: "Enter repository name") {
-                        ForEach(searchResults, id: \.self) { result in
-                            Text("Are you looking for \(result)?").searchCompletion(result)
+                    if viewModel.isLoading {
+                        VStack(alignment: .center) {
+                            Spacer()
+                            HStack(alignment: .center) {
+                                Spacer()
+                                ProgressView("Loading...")
+                                    .progressViewStyle(CircularProgressViewStyle(tint: .black))
+                                    .padding()
+                                Spacer()
+                            }
+                            Spacer()
                         }
+                    } else {
+                        List(viewModel.repositories) { repo in
+                            NavigationLink(destination: RepositoryDetailsView()) {
+                                RepositoryCellView(name: repo.name,
+                                                   stargazerCount: repo.stargazerCount,
+                                                   description: repo.description,
+                                                   lastModifiedDate: repo.lastModifiedDate)
+                                .listRowSeparator(.hidden)
+                                .listRowBackground(Color.purple.opacity(0.1))
+                            }
+                        }
+                        .searchable(text: $searchText,
+                                    placement: .automatic,
+                                    prompt: "Enter repository name") {
+                            ForEach(searchResults, id: \.self) { result in
+                                Text("Are you looking for \(result)?").searchCompletion(result)
+                            }
+                        }
+                        .textInputAutocapitalization(.never)
+                        .onChange(of: searchText) { if searchText.isEmpty {
+                            viewModel.searchRepositories(query: searchText)
+                        }
+                        }
+                        .onSubmit(of: .search) { viewModel.searchRepositories(query: searchText) }
+                        .refreshable { viewModel.searchRepositories(query: searchText) }
+                        .scrollContentBackground(.hidden)
+                        .background(Color.blue.opacity(0.1))
+                        .listStyle(PlainListStyle())
+                        .frame(maxWidth: .infinity)
                     }
-                    .textInputAutocapitalization(.never)
-                    .onAppear {
-                        viewModel.searchRepositories(query: searchText)
-                    }
-                    .onChange(of: searchText) { viewModel.searchRepositories(query: searchText) }
-                    .onSubmit(of: .search) { viewModel.searchRepositories(query: searchText) }
-                    .refreshable { viewModel.searchRepositories(query: searchText) }
-                    .scrollContentBackground(.hidden)
-                    .background(Color.blue.opacity(0.1))
-                    .listStyle(PlainListStyle())
-                    .frame(maxWidth: .infinity)
                 }
                 .navigationTitle("GitHub Repositories")
             }

@@ -15,6 +15,7 @@ internal class RepositoriesViewModel: ObservableObject {
     @Published var repositories: [Repository] = []
     @Published var keywords: [String] = ["data", "swift", "machine learning", "artifical intelligence", "game"]
     @Published var errorMessage: String? = nil
+    @Published var isLoading = false
 
     // MARK: - Managers
     
@@ -29,7 +30,10 @@ internal class RepositoriesViewModel: ObservableObject {
     private var cancellables = Set<AnyCancellable>()
     
     func searchRepositories(query: String) {
+        isLoading = true
+        
         if query.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
+            isLoading = false
             repositories = []
             return
         }
@@ -47,6 +51,7 @@ internal class RepositoriesViewModel: ObservableObject {
             }, receiveValue: { [weak self] repositories in
                 guard let self else { return }
                 self.repositories = repositories.filter { $0.id != nil }
+                isLoading = false
             })
             .store(in: &cancellables)
     }
