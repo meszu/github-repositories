@@ -34,14 +34,14 @@ struct RepositoryListView: View {
                         }
                     } else {
                         List(viewModel.repositories) { repo in
-                            NavigationLink(destination: RepositoryDetailsView()) {
+                            NavigationLink(destination: createRepositoryDetailView(with: repo)) {
                                 RepositoryCellView(name: repo.name,
                                                    stargazerCount: repo.stargazerCount,
                                                    description: repo.description,
                                                    lastModifiedDate: repo.lastModifiedDate)
-                                .listRowSeparator(.hidden)
-                                .listRowBackground(Color.purple.opacity(0.1))
                             }
+                            .listRowSeparator(.hidden)
+                            .listRowBackground(Color.purple.opacity(0.1))
                         }
                         .searchable(text: $searchText,
                                     placement: .automatic,
@@ -64,8 +64,24 @@ struct RepositoryListView: View {
                     }
                 }
                 .navigationTitle("GitHub Repositories")
+                .background(Color.blue.opacity(0.1))
             }
         }
+    }
+    
+    private func createRepositoryDetailView(with repo: Repository) -> RepositoryDetailsView {
+        let data = RepositoryDetailsViewItemViewModel(ownerImageLink: repo.owner?.avatarUrl,
+                                                      ownerName: repo.owner?.login,
+                                                      ownerLink: repo.owner?.gitHubUrl,
+                                                      repoName: repo.name,
+                                                      description: repo.description,
+                                                      repoLink: repo.repoUrl,
+                                                      stargazerCount: 29463,
+                                                      forkCount: 4077,
+                                                      createdDate: repo.createdDate,
+                                                      lastModifiedDate: repo.lastModifiedDate)
+        
+        return RepositoryDetailsView(data: data)
     }
     
     var searchResults: [String] {

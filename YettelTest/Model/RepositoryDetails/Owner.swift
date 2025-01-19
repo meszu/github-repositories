@@ -7,7 +7,7 @@
 
 import Foundation
 
-public struct Owner: Codable {
+public struct Owner: Codable, Equatable {
     public var id: Int?
     public var login: String?
     public var avatarUrl: String?
