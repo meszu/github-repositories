@@ -122,6 +122,7 @@ extension RepositoryDetailsView {
 // MARK: - Preview setup
 
 #Preview {
+    let localizationManager = LocalizationManager()
     let data = RepositoryDetailsViewItemViewModel(ownerImageLink: "https://avatars.githubusercontent.com/u/2131270?v=4",
                                                   ownerName: "qbittorrent",
                                                   ownerLink: "https://api.github.com/users/qbittorrent",
@@ -131,7 +132,8 @@ extension RepositoryDetailsView {
                                                   stargazerCount: 29463,
                                                   forkCount: 4077,
                                                   createdDate: "2012-02-04T09:37:46Z",
-                                                  lastModifiedDate: "2025-01-17T19:23:05Z")
+                                                  lastModifiedDate: "2025-01-17T19:23:05Z",
+                                                  localizationManager: localizationManager)
     
     RepositoryDetailsView(data: data)
 }

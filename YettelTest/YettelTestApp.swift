@@ -9,11 +9,14 @@ import SwiftUI
 
 @main
 struct YettelTestApp: App {
-    let networkManager = NetworkManager()
+    @StateObject private var localizationManager = LocalizationManager()
     
+    private let networkManager = NetworkManager()
+
     var body: some Scene {
         WindowGroup {
             RepositoryListView(networkManager: networkManager)
+                .environmentObject(localizationManager)
         }
     }
 }

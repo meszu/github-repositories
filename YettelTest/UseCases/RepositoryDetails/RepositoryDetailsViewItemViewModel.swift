@@ -28,7 +28,8 @@ internal struct RepositoryDetailsViewItemViewModel {
          stargazerCount: Int?,
          forkCount: Int?,
          createdDate: String?,
-         lastModifiedDate: String?) {
+         lastModifiedDate: String?,
+         localizationManager: LocalizationManager) {
         self.ownerImageLink = ownerImageLink ?? ""
         self.ownerName = ownerName ?? ""
         self.ownerLink = ownerLink ?? ""
@@ -37,8 +38,14 @@ internal struct RepositoryDetailsViewItemViewModel {
         self.repoLink = repoLink ?? ""
         self.stargazerCount = String(stargazerCount ?? 0)
         self.forkCount = String(forkCount ?? 0)
-        self.createdDate = "Creation date: " + (createdDate ?? "")
-        self.lastModifiedDate = "Last modification date: " + (lastModifiedDate ?? "")
+        let createdDatePrefix = localizationManager.localized(
+            LocalizationKeys.repositoryDetailsRepoCreatedDateTextPrefix
+        )
+        self.createdDate = createdDatePrefix + (createdDate ?? "")
+        let lastModifiedDatePrefix = localizationManager.localized(
+            LocalizationKeys.repositoryDetailsRepoModificationDateTextPrefix
+        )
+        self.lastModifiedDate = lastModifiedDatePrefix  + (lastModifiedDate ?? "")
     }
     
     init() {

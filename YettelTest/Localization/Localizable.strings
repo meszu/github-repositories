@@ -1,0 +1,10 @@
+"base_url" = "https://api.github.com/search/repositories?q=";
+"repositories_title" = "GitHub Repositories";
+"repositories_loading_text" = "Loading...";
+"repositories_cell_no_description_text" = "No description available";
+"repositories_cell_no_last_modified_date_text" = "No update time available";
+"repositories_list_searchbar_placeholder_text" = "Enter repository name";
+"repositories_list_search_completion_text_prefix" = "Are you looking for ";
+"repositories_list_search_completion_text_postfix" = "?";
+"repository_details_repo_created_date_text_prefix" = "Creation date: ";
+"repository_details_repo_modification_date_text_prefix" = "Last modification date: ";
