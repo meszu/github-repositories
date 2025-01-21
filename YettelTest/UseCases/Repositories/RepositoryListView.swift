@@ -23,17 +23,12 @@ struct RepositoryListView: View {
             GeometryReader { geometry in
                 VStack {
                     if viewModel.isLoading {
-                        VStack(alignment: .center) {
-                            Spacer()
-                            HStack(alignment: .center) {
-                                Spacer()
-                                ProgressView(localization.localized(LocalizationKeys.repositoriesLoadingText))
-                                    .progressViewStyle(CircularProgressViewStyle(tint: .black))
-                                    .padding()
-                                Spacer()
-                            }
-                            Spacer()
-                        }
+                        ProgressView(localization.localized(LocalizationKeys.repositoriesLoadingText))
+                            .progressViewStyle(CircularProgressViewStyle(tint: .black))
+                            .padding()
+                            .frame(maxWidth: .infinity,
+                                   maxHeight: .infinity,
+                                   alignment: .center)
                     } else {
                         List(viewModel.repositories) { repo in
                             NavigationLink(destination: createRepositoryDetailView(with: repo)) {
