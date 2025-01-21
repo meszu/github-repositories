@@ -113,6 +113,7 @@ extension RepositoryDetailsView {
             Spacer()
             Text(data.lastModifiedDate)
                 .font(.caption)
+                .multilineTextAlignment(.trailing) 
         }
         .padding([.leading, .trailing], 16)
         .padding(.bottom, 8)

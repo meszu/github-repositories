@@ -38,14 +38,35 @@ internal struct RepositoryDetailsViewItemViewModel {
         self.repoLink = repoLink ?? ""
         self.stargazerCount = String(stargazerCount ?? 0)
         self.forkCount = String(forkCount ?? 0)
+        
+        let isoFormatter = ISO8601DateFormatter()
+        isoFormatter.formatOptions = [.withInternetDateTime]
+        
+        let outputFormatter = DateFormatter()
+        outputFormatter.dateFormat = "MMMM dd, yyyy 'at' h:mm a"
+        outputFormatter.timeZone = TimeZone.current
+        
         let createdDatePrefix = localizationManager.localized(
             LocalizationKeys.repositoryDetailsRepoCreatedDateTextPrefix
         )
-        self.createdDate = createdDatePrefix + (createdDate ?? "")
+        
         let lastModifiedDatePrefix = localizationManager.localized(
             LocalizationKeys.repositoryDetailsRepoModificationDateTextPrefix
         )
-        self.lastModifiedDate = lastModifiedDatePrefix  + (lastModifiedDate ?? "")
+        
+        if let date = isoFormatter.date(from: createdDate ?? "") {
+            let formattedCreatedDate = outputFormatter.string(from: date)
+            self.createdDate = createdDatePrefix + "\n" + formattedCreatedDate
+        } else {
+            self.createdDate = createdDatePrefix + "\n" + (createdDate ?? "")
+        }
+        
+        if let date = isoFormatter.date(from: lastModifiedDate ?? "") {
+            let formattedLastModifiedDate = outputFormatter.string(from: date)
+            self.lastModifiedDate = lastModifiedDatePrefix + "\n" + formattedLastModifiedDate
+        } else {
+            self.lastModifiedDate = lastModifiedDatePrefix + "\n" + (lastModifiedDate ?? "")
+        }
     }
     
     init() {

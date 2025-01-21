@@ -5,8 +5,8 @@
 //  Created by Kristóf Mészáros, Vodafone Hungary on 2025. 01. 17..
 //
 
-import Foundation
 import Combine
+import Foundation
 
 internal class RepositoriesViewModel: ObservableObject {
     
@@ -16,6 +16,10 @@ internal class RepositoriesViewModel: ObservableObject {
     @Published var keywords: [String] = ["data", "swift", "machine learning", "artifical intelligence", "game"]
     @Published var errorMessage: String? = nil
     @Published var isLoading = false
+    
+    // MARK: - Private variables
+    
+    private var cancellables = Set<AnyCancellable>()
 
     // MARK: - Managers
     
@@ -27,7 +31,7 @@ internal class RepositoriesViewModel: ObservableObject {
         self.networkManager = networkManager
     }
     
-    private var cancellables = Set<AnyCancellable>()
+    // MARK: - Public methods
     
     func searchRepositories(query: String) {
         isLoading = true
@@ -50,9 +54,34 @@ internal class RepositoriesViewModel: ObservableObject {
                 }
             }, receiveValue: { [weak self] repositories in
                 guard let self else { return }
-                self.repositories = repositories.filter { $0.id != nil }
+                let reposWithValidId = repositories.filter { $0.id != nil }
+                let reposWithFormattedDate = reposWithValidId.map { [weak self] repository in
+                    guard let self else { return repository }
+                    return formatLastModifiedDate(in: repository)
+                }
+                self.repositories = reposWithFormattedDate
                 isLoading = false
             })
             .store(in: &cancellables)
+    }
+    
+    // MARK: - Private methods
+    
+    private func formatLastModifiedDate(in repository: Repository) -> Repository {
+        var repo = repository
+        
+        let isoFormatter = ISO8601DateFormatter()
+        isoFormatter.formatOptions = [.withInternetDateTime]
+        
+        let outputFormatter = DateFormatter()
+        outputFormatter.dateFormat = "MMMM dd, yyyy 'at' h:mm a"
+        outputFormatter.timeZone = TimeZone.current
+        
+        if let date = isoFormatter.date(from: repo.lastModifiedDate ?? "") {
+            let formattedLastModifiedDate = outputFormatter.string(from: date)
+            repo.lastModifiedDate = formattedLastModifiedDate
+        }
+        
+        return repo
     }
 }
